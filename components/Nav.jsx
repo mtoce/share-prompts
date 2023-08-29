@@ -6,20 +6,16 @@ import { signIn, signOut, useSession, getProviders } from 'next-auth/react';
 
 const Nav = () => {
     const { data: session } = useSession();
-    const isUserLoggedIn = true;
 
     const [providers, setProviders] = useState(null);
     const [toggleDropdown, settoggleDropdown] = useState(false);
 
     useEffect(() => {
-      const setUpProviders = async () => {
-        const response = await getProviders();
-        setProviders(response);
-      };
-      
-      setUpProviders();
-    }, [])
-    
+        (async () => {
+          const res = await getProviders();
+          setProviders(res);
+        })();
+      }, []);
 
     return (
         <nav className='flex-between w-full mb-16 pt-3'>
@@ -48,7 +44,7 @@ const Nav = () => {
                         </button>
                         <Link href='/profile'>
                             <Image
-                                src='assets/images/logo.svg'
+                                src={session?.user.image}
                                 width={37}
                                 height={37}
                                 className='rounded-full'
@@ -79,7 +75,7 @@ const Nav = () => {
                 {session?.user ? (
                     <div className='flex'>
                         <Image
-                            src='assets/images/logo.svg'
+                            src={session?.user.image}
                             width={37}
                             height={37}
                             className='rounded-full'
